@@ -1,0 +1,16 @@
+{
+    "databases": [
+        {
+            "name": "heliohost",
+            "url": "jdbc:mysql://stevie.heliohost.org:3306/szati64_boltDB",
+            "user": "szati64_user",
+            "pass": "{1S^#1%6MOi="
+        },
+        {
+            "name": "localhost",
+            "url": "jdbc:mysql://localhost/bolt",
+            "user": "root",
+            "pass": "123456"
+        }
+    ]
+}

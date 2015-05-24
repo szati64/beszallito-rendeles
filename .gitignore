@@ -1,0 +1,11 @@
+.classpath
+.project
+
+.settings/
+target/
+
+nbactions.xml
+nb-configuration.xml
+
+*.jar
+*.log
