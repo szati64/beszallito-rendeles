@@ -5,6 +5,6 @@ Egy alkalmazás, mely segítségével előre beregisztrált felhasználók rende
 
 ### Hogyan tudom használni? ###
 
-* Leklónozod
+* leklónozod
 * mvn package
 * java -jar target/beszallito-rendeles-1.0-jar-with-dependencies.jar [adatbazis_neve]
