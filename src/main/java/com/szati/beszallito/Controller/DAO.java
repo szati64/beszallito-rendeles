@@ -310,9 +310,9 @@ public class DAO {
     }    
     
     /**
-     * Elküldi az összeállított {@link szati.bolt.order.Models.Rendeles}-t.
+     * Elküldi az összeállított {@link com.szati.beszallito.Model.Rendeles}-t.
      * 
-     * @param rendeles a rendelésre elküldenő {@link szati.bolt.order.Models.Rendeles}
+     * @param rendeles a rendelésre elküldenő {@link com.szati.beszallito.Model.Rendeles}
      */
     public static void rendelesElkuldese(Rendeles rendeles) {        
         try(Connection conn = ConnectionFactory.getConnection();
