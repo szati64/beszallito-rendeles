@@ -261,7 +261,38 @@ public class ControllerTest {
         
         instance.getModel().setTermekek(testTermekek);
         instance.setDarab(id, db);
-        assertEquals(instance.getDarab(id), db);
+        assertEquals(db, instance.getDarab(id));
+    }
+    
+    @Test
+    public void testSetDarab2() {
+        int id = 1;
+        int db1 = 10;
+        int db2 = 12;
+        Controller instance = new Controller();
+        
+        List<Termek> testTermekek = new ArrayList<>();
+        testTermekek.add(new Termek(1, "TEST1", 10, 30, 25, 2, 1, true, false));
+        
+        instance.getModel().setTermekek(testTermekek);
+        instance.setDarab(id, db1);
+        instance.setDarab(id, db2);
+        assertEquals(db2, instance.getDarab(id));
+    }
+    
+    @Test
+    public void testSetDarab3() {
+        int id = 1;
+        int db = 0;
+        Controller instance = new Controller();
+        
+        List<Termek> testTermekek = new ArrayList<>();
+        testTermekek.add(new Termek(1, "TEST1", 10, 30, 25, 2, 1, true, false));
+        
+        instance.getModel().setTermekek(testTermekek);
+        instance.setDarab(id, 4);
+        instance.setDarab(id, db);
+        assertEquals(db, instance.getDarab(id));
     }
 
     @Test

@@ -173,5 +173,24 @@ public class ModelTest {
         
         assertEquals(kedvezmenyek, instance.getKedvezmenyek());
     }
+
+    @Test
+    public void testGetKategoriaIdByNev() {
+        Model instance = new Model();
+        instance.setKategoriak(kategoriak);
+        
+        int expResult = -1;
+        int result = instance.getKategoriaIdByNev("nem teszt");
+        assertEquals(expResult, result);
+    }
     
+    @Test
+    public void testGetMarkaIdByNev() {
+        Model instance = new Model();
+        instance.setMarkak(markak);
+        
+        int expResult = -1;
+        int result = instance.getMarkaIdByNev("nem teszt");
+        assertEquals(expResult, result);
+    }
 }
