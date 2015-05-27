@@ -162,7 +162,6 @@ public class TermekekPanel extends JPanel {
                                         "db.",
                                         "zsugor",
                                         "ár",
-                                        "akciós ár",
                                         "akcios",
                                         "új"};
 
@@ -201,12 +200,12 @@ public class TermekekPanel extends JPanel {
                 case 3:
                     return termekek.get(row).getZsugor();
                 case 4:
-                    return termekek.get(row).getAr();
+                    return termekek.get(row).isAkcios() ?
+                            termekek.get(row).getAkciosAr() :
+                            termekek.get(row).getAr();
                 case 5:
-                    return termekek.get(row).getAkciosAr();
-                case 6:
                     return termekek.get(row).isAkcios();
-                case 7:
+                case 6:
                     return termekek.get(row).isUj();
             }
             return null;

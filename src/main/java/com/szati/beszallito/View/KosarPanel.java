@@ -88,35 +88,39 @@ public final class KosarPanel extends JPanel {
         
        
         elkuld.addActionListener((ActionEvent e) -> {
-            
-            SwingWorker<Void, Void>  worker = new SwingWorker<Void, Void>() {  
-                @Override
-                protected Void doInBackground() throws Exception {
-                    CardLayout cl = (CardLayout)foPanel.getLayout();
-                    cl.show(foPanel, "tolt");
-                    
-                    if (DAO.rendelesElkuldese(jelenlegiRendeles)) {
-                        controller.getMostaniRendeles().clear();
-                        updateTable(controller);
-                        validate();
+            if (jelenlegiRendeles.getRendeltTermekek().size() > 0) {
+                SwingWorker<Void, Void>  worker = new SwingWorker<Void, Void>() {  
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        CardLayout cl = (CardLayout)foPanel.getLayout();
+                        cl.show(foPanel, "tolt");
 
-                        cl.show(foPanel, "kosar");
-                        JOptionPane.showMessageDialog(view,
-                                "A rendelés sikeresen elküldve!",
-                                "Rendelés elküldve", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        cl.show(foPanel, "kosar");
-                        JOptionPane.showMessageDialog(view,
-                                "A rendelés elküldése közben probléma lépett fel!",
-                                "Rendelés elküldése sikertelen", JOptionPane.ERROR_MESSAGE);
+                        if (DAO.rendelesElkuldese(jelenlegiRendeles)) {
+                            controller.getMostaniRendeles().clear();
+                            updateTable(controller);
+                            validate();
+
+                            cl.show(foPanel, "kosar");
+                            JOptionPane.showMessageDialog(view,
+                                    "A rendelés sikeresen elküldve!",
+                                    "Rendelés elküldve", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            cl.show(foPanel, "kosar");
+                            JOptionPane.showMessageDialog(view,
+                                    "A rendelés elküldése közben probléma lépett fel!",
+                                    "Rendelés elküldése sikertelen", JOptionPane.ERROR_MESSAGE);
+                        }
+
+                        return null;
                     }
-                    
-                    return null;
-                }
-            };
-            worker.execute();
-            
-        });            
+                };
+                worker.execute();
+            } else {
+                JOptionPane.showMessageDialog(view,
+                    "A kosár üres!",
+                    "Üres kosár", JOptionPane.WARNING_MESSAGE);
+            }
+        });
     }
     
     public void updateTable(Controller controller) {
