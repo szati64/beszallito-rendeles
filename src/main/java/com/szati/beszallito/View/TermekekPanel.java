@@ -162,7 +162,7 @@ public class TermekekPanel extends JPanel {
                                         "db.",
                                         "zsugor",
                                         "ár",
-                                        "akcios",
+                                        "akciós",
                                         "új"};
 
         List<Termek> termekek;

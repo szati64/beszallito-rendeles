@@ -25,8 +25,7 @@ public class Controller {
     private static Model model;
     
     /**
-     * Egy {@link java.util.List} mely tartalmazza a jelenlegi rendelésben szereplő
-     * termékeket.
+     * A kosárban lévő termékek.
      */
     private final List<RendeltTermek> mostaniRendeles;
     
@@ -38,6 +37,13 @@ public class Controller {
         model = new Model();
     }
     
+    /**
+     * Megadja hány darab adott kategóriájú termék van a kosárban lévő termékekben.
+     * 
+     * @param rendeltList a kosárban lévő termékek listája
+     * @param kategoriaId kategória azonosító
+     * @return hány darab termék van a kosárban lévő termékek listában az adott kategóriájúból
+     */
     public int getDarabByKategoriaIdFromRendeltek(List<RendeltTermek> rendeltList,
             int kategoriaId) {
         int db = 0;
@@ -47,6 +53,13 @@ public class Controller {
         return db;
     }
     
+    /**
+     * Megadja hány darab adott márkájú termék van a kosárban lévő termékekben.
+     * 
+     * @param rendeltList a kosárban lévő termékek listája
+     * @param markaId márka azonosító
+     * @return hány darab termék van a rendelt termékek listában az adott márkájúból
+     */
     public int getDarabByMarkaIdFromRendeltek(List<RendeltTermek> rendeltList,
             int markaId) {
         int db = 0;
@@ -56,6 +69,11 @@ public class Controller {
         return db;
     }
     
+    /**
+     * Frissíti az árakat a kosárban lévő termékek listájában.
+     * 
+     * @param mostaniRendeles  a rendelt termékek listája
+     */
     public void updateArakInRendeltTermek(List<RendeltTermek> mostaniRendeles) {
         mostaniRendeles.stream().forEach((rt) -> {
             Termek t = rt.getTermek();
@@ -66,15 +84,23 @@ public class Controller {
         });
     }
     
+    /**
+     * Visszaadja a kosárban lévő termékek listájára vonatkozó érvényes kedvezményeket
+     * olyan listában, hogy az elemei {@link java.util.AbstractMap.SimpleEntry} típusúak,
+     * aminek a kulcsa a kedvezmény azonosítója, az értéke pedig a kedvezmény miatt
+     * elengedett ár.
+     * 
+     * @param mostaniRendeles a kosárban lévő termékek listája
+     * @return a rendelt termékek listájára vonatkozó érvényes kedvezmények
+     */
     public List<SimpleEntry<Integer, Integer>> getKedvezmenyekForRendeltTermek(List<RendeltTermek> mostaniRendeles) {
         List<SimpleEntry<Integer, Integer>> kedvezmenyek = new ArrayList<>();
         if (model.getKedvezmenyById(3) != null) {
-            int szum = 0;
-            
-            for (RendeltTermek rt : mostaniRendeles)
-                if (rt.getTermek().isUj())
-                    szum += rt.getAr() * rt.getDb();
-            
+            int szum = mostaniRendeles
+                    .stream()
+                    .filter(x -> x.getTermek().isUj())
+                    .mapToInt(x -> x.getAr() * x.getDb()).sum();
+
             if (szum != 0) {
                 szum *= 0.1;
                 model.addUjKedvezmeny(kedvezmenyek, 3, szum);
@@ -90,10 +116,11 @@ public class Controller {
                     zsugorokSzama += rt.getDb() / rt.getTermek().getZsugor();
             
             if (zsugorokSzama >= 10) {
-                int szum = 0;
-                for (RendeltTermek rt : mostaniRendeles)
-                    if (rt.getTermek().getKategoriaId() == italId)
-                        szum += rt.getDb() * rt.getAr();
+                int szum = mostaniRendeles
+                    .stream()
+                    .filter(x -> x.getTermek().getKategoriaId() == italId)
+                    .mapToInt(x -> x.getAr() * x.getDb()).sum();
+                
                 
                 szum *= 0.15;
                 model.addUjKedvezmeny(kedvezmenyek, 4, szum);
@@ -101,9 +128,9 @@ public class Controller {
         }
          
         if (model.getKedvezmenyById(5) != null && LocalDate.now().getDayOfMonth() <= 5) {
-            int szum = 0;
-            for (RendeltTermek rt : mostaniRendeles)
-                    szum += rt.getDb() * rt.getAr();
+            int szum = mostaniRendeles
+                .stream()
+                .mapToInt(x -> x.getAr() * x.getDb()).sum();
 
             szum *= 0.10;
             model.addUjKedvezmeny(kedvezmenyek, 5, szum);
@@ -111,9 +138,10 @@ public class Controller {
         
         if (model.getKedvezmenyById(6) != null &&
                 getDarabByMarkaIdFromRendeltek(mostaniRendeles, model.getMarkaIdByNev("Lipton")) >= 3) {
-            int szum = 0;
-            for (RendeltTermek rt : mostaniRendeles)
-                szum += rt.getDb() * rt.getAr();
+            int szum = mostaniRendeles
+                .stream()
+                .filter(x -> x.getTermek().getMarkaId() == model.getMarkaIdByNev("Lipton"))
+                .mapToInt(x -> x.getAr() * x.getDb()).sum();
             
             szum *= 0.10;
             model.addUjKedvezmeny(kedvezmenyek, 6, szum);
@@ -121,11 +149,10 @@ public class Controller {
 
         if (model.getKedvezmenyById(7) != null &&
                 getDarabByMarkaIdFromRendeltek(mostaniRendeles, model.getMarkaIdByNev("Ave")) >= 3) {
-            
-            
-            int szum = 0;
-            for (RendeltTermek rt : mostaniRendeles)
-                szum += rt.getDb() * rt.getAr();
+            int szum = mostaniRendeles
+                .stream()
+                .filter(x -> x.getTermek().getMarkaId() == model.getMarkaIdByNev("Ave"))
+                .mapToInt(x -> x.getAr() * x.getDb()).sum();
             
             szum *= 0.10;
             model.addUjKedvezmeny(kedvezmenyek, 7, szum);
@@ -134,8 +161,16 @@ public class Controller {
         return kedvezmenyek;
     }
     
+    /**
+     * A kosárban lévő termékek listájából egy {@link com.szati.beszallito.Model.Rendeles}
+     * objektumot készít, mely már tartalmazza a rendelésre vonatkozó kedvezményeket,
+     * és a pontos árakat.
+     * 
+     * @return egy {@link com.szati.beszallito.Model.Rendeles} objektum,
+     * mely tartalmazza a rendelésre vonatkozó kedvezményeket,
+     * és a pontos árakat
+     */
     public Rendeles getRendelesFromMostaniRendeles() {
-
         updateArakInRendeltTermek(mostaniRendeles);
         List<SimpleEntry<Integer, Integer>> kedvezmenyek = getKedvezmenyekForRendeltTermek(mostaniRendeles);
         
@@ -146,6 +181,12 @@ public class Controller {
         return new Rendeles(-1, null, osszeg, mostaniRendeles, kedvezmenyek);
     }
 
+    /**
+     * A kosárban lévő termékek listájához hozzáad egy új terméket.
+     * 
+     * @param id a termék azonosítója
+     * @param db mennyiség
+     */
     public void setDarab(int id, int db) {
         RendeltTermek rt;
         
@@ -169,6 +210,12 @@ public class Controller {
         mostaniRendeles.add(rt);
     }
     
+    /**
+     * Visszaadja hogy a megadott termékből mennyi van a kosárban.
+     * 
+     * @param id termék azonosítója
+     * @return a termékből a kosárban lévő mennyiség
+     */
     public int getDarab(int id) {
         for (RendeltTermek mostaniRendele : mostaniRendeles)
             if (mostaniRendele.getTermek().getId() == id)
@@ -177,9 +224,9 @@ public class Controller {
     }
     
     /**
-     * Visszaadja a mostani rendeléset.
+     * Visszaadja a kosárban lévő termékeket.
      * 
-     * @return a mostani rendelés
+     * @return a kosárban lévő termékek
      */
     public List<RendeltTermek> getMostaniRendeles() {
         return mostaniRendeles;

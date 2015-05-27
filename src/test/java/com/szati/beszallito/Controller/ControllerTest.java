@@ -188,6 +188,7 @@ public class ControllerTest {
         testTermekek.add(new Termek(1, "TEST1", 10, 30, 25, 1, 1, true, false));
         testTermekek.add(new Termek(2, "TEST2", 10, 30, 25, 1, 1, true, false));
         testTermekek.add(new Termek(3, "TEST3", 10, 30, 25, 1, 1, true, false));
+        testTermekek.add(new Termek(4, "TEST4", 10, 30, 25, 2, 1, true, false));
         instance.getModel().setTermekek(testTermekek);
         
         List<Kedvezmeny> testKedvezmenyek = new ArrayList<>();
@@ -200,6 +201,7 @@ public class ControllerTest {
         instance.setDarab(1, darab);
         instance.setDarab(2, darab);
         instance.setDarab(3, darab);
+        instance.setDarab(4, darab);
         instance.updateArakInRendeltTermek(mostaniRendeles);
         
         int expResult = testTermekek.get(0).getAr() * darab * 3;
@@ -221,6 +223,7 @@ public class ControllerTest {
         testTermekek.add(new Termek(1, "TEST1", 10, 30, 25, 1, 1, true, false));
         testTermekek.add(new Termek(2, "TEST2", 10, 30, 25, 1, 1, true, false));
         testTermekek.add(new Termek(3, "TEST3", 10, 30, 25, 1, 1, true, false));
+        testTermekek.add(new Termek(4, "TEST4", 10, 30, 25, 2, 1, true, false));
         instance.getModel().setTermekek(testTermekek);
         
         List<Kedvezmeny> testKedvezmenyek = new ArrayList<>();
@@ -233,6 +236,7 @@ public class ControllerTest {
         instance.setDarab(1, darab);
         instance.setDarab(2, darab);
         instance.setDarab(3, darab);
+        instance.setDarab(4, darab);
         instance.updateArakInRendeltTermek(mostaniRendeles);
         
         int expResult = testTermekek.get(0).getAr() * darab * 3;
