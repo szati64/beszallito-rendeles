@@ -1,6 +1,7 @@
 /**
- * A Model csomagja tartalmazza az alkalmazásban használt reprezentációkat, mint például:
- * termék, kedvezmény, rendelés. Ezeket a kisebb osztályokat a Model osztály fogja közre,
- * mely nagyobb méretű adatszerkezetek is kezel már.
+ * Tartalmazza az alkalmazásban használt reprezentációkat, mint például:
+ * termékek, kedvezmények, rendelések. Ezeket a kisebb osztályokat a
+ * {@link com.szati.beszallito.Model.Model} osztály fogja közre,
+ * mely nagyobb méretű adatszerkezetek is kezel.
  */
 package com.szati.beszallito.Model;

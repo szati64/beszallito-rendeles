@@ -85,8 +85,8 @@ public class Controller {
     }
     
     /**
-     * Visszaadja a kosárban lévő termékek listájára vonatkozó érvényes kedvezményeket
-     * olyan listában, hogy az elemei {@link java.util.AbstractMap.SimpleEntry} típusúak,
+     * Visszaadja a kosárban lévő termékek listájára vonatkozó érvényes kedvezményeket.
+     * A lista elemei olyan {@link java.util.AbstractMap.SimpleEntry} típusúak,
      * aminek a kulcsa a kedvezmény azonosítója, az értéke pedig a kedvezmény miatt
      * elengedett ár.
      * 
@@ -164,7 +164,8 @@ public class Controller {
     /**
      * A kosárban lévő termékek listájából egy {@link com.szati.beszallito.Model.Rendeles}
      * objektumot készít, mely már tartalmazza a rendelésre vonatkozó kedvezményeket,
-     * és a pontos árakat.
+     * és a pontos árakat. Felhasználja az {@code updateArakInRendeltTermek} és
+     * {@code getKedvezmenyekForRendeltTermek} függvényeket.
      * 
      * @return egy {@link com.szati.beszallito.Model.Rendeles} objektum,
      * mely tartalmazza a rendelésre vonatkozó kedvezményeket,
