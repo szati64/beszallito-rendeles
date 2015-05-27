@@ -313,8 +313,9 @@ public class DAO {
      * Elküldi az összeállított {@link com.szati.beszallito.Model.Rendeles}-t.
      * 
      * @param rendeles a rendelésre elküldenő {@link com.szati.beszallito.Model.Rendeles}
+     * @return a rendelés elküldésének sikeressége
      */
-    public static void rendelesElkuldese(Rendeles rendeles) {        
+    public static boolean rendelesElkuldese(Rendeles rendeles) {        
         try(Connection conn = ConnectionFactory.getConnection();
             Statement statement = conn.createStatement()) { 
             int rendelesId;
@@ -323,7 +324,7 @@ public class DAO {
                     String.format("INSERT INTO rendelesek VALUES(DEFAULT, %d,"
                     + "DEFAULT, %d)", felhasznaloId,
                     rendeles.getAr()), Statement.RETURN_GENERATED_KEYS);
-
+            
             ResultSet rs = statement.getGeneratedKeys();
             if (rs.next()) {
                 rendelesId = rs.getInt(1);
@@ -334,7 +335,7 @@ public class DAO {
                             + "%d, %d, %d, %d)", rendelesId, rt.getTermek().getId(),
                             rt.getAr(), rt.getDb()));
                 }
-
+                
                 for (SimpleEntry<Integer, Integer> k : rendeles.getKedvezmenyek()) {
                     statement.executeUpdate(
                     String.format("INSERT INTO rendeltkedvezmeny VALUES("
@@ -345,10 +346,13 @@ public class DAO {
                 conn.commit();
                 LOG.info(rendelesId +
                         " azonosítójú rendelés elküldve!");
+                
+                return true;
             }
         }   
         catch (SQLException e) {
-            LOG.error("Hiba a rendelés feladása során!");
+            LOG.error("Hiba a rendelés feladása során: " + e);
         }
+        return false;
     }
 }
