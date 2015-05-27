@@ -28,7 +28,7 @@ public class View extends JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(0, 0));
+        setLayout(new BorderLayout());
         
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         EmptyBorder keret = new EmptyBorder(5, 5, 5, 5);
@@ -37,7 +37,7 @@ public class View extends JFrame {
         TermekekPanel termekekPanel = new TermekekPanel(controller);
         tabbedPane.addTab("Termékek", termekekPanel);
         
-        KosarPanel kosarPanel = new KosarPanel(controller);
+        KosarPanel kosarPanel = new KosarPanel(this, controller);
         tabbedPane.addTab("Kosár", kosarPanel);
         
         RendelesekPanel rendelesekPanel = new RendelesekPanel(controller);

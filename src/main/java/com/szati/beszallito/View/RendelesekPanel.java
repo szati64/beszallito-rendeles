@@ -17,14 +17,15 @@ import javax.swing.table.TableCellRenderer;
 import com.szati.beszallito.Controller.DAO;
 import com.szati.beszallito.Model.Rendeles;
 import com.szati.beszallito.Controller.Controller;
+import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingWorker;
 
 public class RendelesekPanel extends JPanel {
     private final JTable rendelesekTabla;
     
     public RendelesekPanel(Controller controller) {
-        this.setLayout(new CardLayout());
-        JPanel ez = (JPanel) this;
+        this.setLayout(new BorderLayout());
         
         //rendelesek card
         JScrollPane rendelesekScroll = new JScrollPane();
@@ -47,9 +48,7 @@ public class RendelesekPanel extends JPanel {
         
         rendelesekTabla.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         rendelesekScroll.setViewportView(rendelesekTabla);
-        
-        this.add(rendelesekScroll, "rendelesek");
-        
+                
         //rendeltTermekek card
         JPanel rendeltTermekekPanel = new JPanel();
         rendeltTermekekPanel.setLayout(new BorderLayout());
@@ -77,29 +76,47 @@ public class RendelesekPanel extends JPanel {
         rendeltTermekekPanel.add(rendeltTermekekScroll, BorderLayout.CENTER);
         rendeltTermekekPanel.add(visszaGomb, BorderLayout.SOUTH);
         
-        this.add(rendeltTermekekPanel, "rendeltTermekek");
+        JPanel foPanel = new JPanel(new CardLayout());
+        foPanel.add(rendelesekScroll, "rendelesek");
+        foPanel.add(rendeltTermekekPanel, "rendeltTermekek");
+        foPanel.add(new JLabel("kérem várjon...",
+                SwingConstants.CENTER), "tolt");
+        this.add(foPanel);
         
         rendelesekTabla.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (rendelesekTabla.getSelectedRow() != -1) {
+                SwingWorker<Void, Void>  worker = new SwingWorker<Void, Void>() {  
+
+                    @Override
+                    protected Void doInBackground() throws Exception {
+
+                        CardLayout cl = (CardLayout)foPanel.getLayout();
+                        cl.show(foPanel, "tolt");
+
+                        Rendeles r = (Rendeles)((RendelesekTabla)rendelesekTabla.getModel())
+                                        .getRendeles(rendelesekTabla.getSelectedRow());
+
+                        rendeltTermekekTable.setModel(new RendelesTabla(
+                                controller,
+                                DAO.getRendeltTermekek(controller, r.getId()),
+                                DAO.getRendelesKedvezmenyek(r.getId())));
+
+                        rendelesekTabla.clearSelection();
+
+
+                        cl.show(foPanel, "rendeltTermekek");
+
+                        return null;
+                    }
+                };
                 
-                Rendeles r = (Rendeles)((RendelesekTabla)rendelesekTabla.getModel())
-                                .getRendeles(rendelesekTabla.getSelectedRow());
-                
-                rendeltTermekekTable.setModel(new RendelesTabla(
-                        controller,
-                        DAO.getRendeltTermekek(controller, r.getId()),
-                        DAO.getRendelesKedvezmenyek(r.getId())));
-                
-                rendelesekTabla.clearSelection();
-                
-                CardLayout cl = (CardLayout)getLayout();
-                cl.show(ez, "rendeltTermekek");
+                worker.execute();
             }
         });
         
         visszaGomb.addActionListener((ActionEvent ae) -> {
-            CardLayout cl = (CardLayout)getLayout();
-            cl.show(ez, "rendelesek");
+            CardLayout cl = (CardLayout)foPanel.getLayout();
+            cl.show(foPanel, "rendelesek");
         });
     }
     
